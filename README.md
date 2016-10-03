@@ -19,7 +19,7 @@ php yii migrate --migrationPath=vendor/halumein/yii2-spending/migrations
 
 ```php
     'modules' => [
-        'test' => [
+        'spending' => [
             'class' => 'halumein\spending\Module',
         ],
         //...
