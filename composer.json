@@ -27,5 +27,8 @@
         "psr-4": {
             "halumein\\spending\\": ""
         }
+    },
+    "extra": {
+        "bootstrap": "halumein\\spending\\Bootstrap"
     }
 }
