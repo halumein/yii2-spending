@@ -8,6 +8,7 @@ use halumein\spending\models\search\SpendingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use halumein\spending\models\Category;
 
 /**
  * SpendingController implements the CRUD actions for Spending model.
@@ -142,5 +143,34 @@ class SpendingController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    //=========== testMethods ============
+    public function actionByPeriod()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+
+        $arrayTransactionByPeriod = Yii::$app->spending->getSumByPeriod($dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($arrayTransactionByPeriod);
+        die;
+        //return $arrayTransactionByPeriod;
+    }
+
+    public function actionByCategory()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $modelCategory = Category::findOne($get['id']);
+        $sumByCategory =  Yii::$app->spending->getAmountByCategory($modelCategory, $dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($sumByCategory);
+        die;
+
     }
 }

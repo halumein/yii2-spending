@@ -104,4 +104,9 @@ class Category extends \yii\db\ActiveRecord
 
         return $return;
     }
+
+    public function getSpendings()
+    {
+        return $this->hasMany(Spending::className(), ['category_id' => 'id']);
+    }
 }
