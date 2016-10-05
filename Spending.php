@@ -1,6 +1,7 @@
 <?php
 namespace halumein\spending;
 
+use halumein\cashbox\models\Cashbox;
 use yii\base\Component;
 use halumein\spending\models\Spending as SpendingModel;
 use halumein\spending\interfaces\Spending as SpendingInterface;
@@ -57,9 +58,9 @@ class Spending implements SpendingInterface
             $spendingByPeriod->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
             $spendingByPeriod->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }
-        $sumByPeriod = $spendingByPeriod->sum('amount');
+        $amountByPeriod = $spendingByPeriod->sum('amount');
 
-        return $sumByPeriod;
+        return $amountByPeriod;
     }
 
     /*
@@ -87,26 +88,6 @@ class Spending implements SpendingInterface
         return $sumByPeriod;
     }
 
-    public function getSumByCategory(Category $categoryModel, $dateStart = null, $dateStop = null)
-    {
-        $querySpendingByCategory = $categoryModel->getSpendings();
-        if($dateStart){
-            $dateStart = date('Y-m-d H:i:s', strtotime($dateStart));
-            if(!$dateStop) {
-                $dateStop = date('Y-m-d H:i:s', strtotime($dateStart)+86399);
-                $querySpendingByCategory->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
-                $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
-            } else {
-                $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
-                $querySpendingByCategory->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
-                $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
-            }
-        }
-
-        $sumByPeriod = $querySpendingByCategory->sum('cost');
-        return $sumByPeriod;
-    }
-
     public function getAmountByCategory(Category $categoryModel, $dateStart = null, $dateStop = null)
     {
         $querySpendingByCategory = $categoryModel->getSpendings();
@@ -123,7 +104,83 @@ class Spending implements SpendingInterface
             }
         }
 
-        $sumByPeriod = $querySpendingByCategory->sum('amount');
-        return $sumByPeriod;
+        $amountByCategory = $querySpendingByCategory->sum('amount');
+        return $amountByCategory;
+    }
+
+    public function getSumByCategory(Category $categoryModel, $dateStart = null, $dateStop = null)
+    {
+        $querySpendingByCategory = $categoryModel->getSpendings();
+        if($dateStart){
+            $dateStart = date('Y-m-d H:i:s', strtotime($dateStart));
+            if(!$dateStop) {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStart)+86399);
+                $querySpendingByCategory->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            } else {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
+                $querySpendingByCategory->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            }
+        }
+
+        $sumByCategory = $querySpendingByCategory->sum('cost');
+        return $sumByCategory;
+    }
+
+    public function getSumByCashbox($cashboxID, $dateStart = null, $dateStop = null)
+    {
+        $spendingByCashbox = SpendingModel::find()->where(['cashbox_id' => $cashboxID]);
+
+        if($dateStart){
+            $dateStart = date('Y-m-d H:i:s', strtotime($dateStart));
+            if(!$dateStop) {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStart)+86399);
+                $spendingByCashbox->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $spendingByCashbox->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            } else {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
+                $spendingByCashbox->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $spendingByCashbox->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            }
+        }
+
+        $sumByCashbox = $spendingByCashbox->sum('cost');
+        return $sumByCashbox;
+    }
+
+    public function getAmountByCashbox($cashboxID, $dateStart = null, $dateStop = null)
+    {
+        $spendingByCashbox = SpendingModel::find()->where(['cashbox_id' => $cashboxID]);
+
+        if($dateStart){
+            $dateStart = date('Y-m-d H:i:s', strtotime($dateStart));
+            if(!$dateStop) {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStart)+86399);
+                $spendingByCashbox->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $spendingByCashbox->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            } else {
+                $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
+                $spendingByCashbox->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+                $spendingByCashbox->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+            }
+        }
+
+        $amountByCashbox = $spendingByCashbox->sum('amount');
+        return $amountByCashbox;
+    }
+
+    public function getSumByName($name)
+    {
+        $spendingByName = SpendingModel::find()->where(['name' => $name]);
+        $sumByName = $spendingByName->sum('cost');
+        return $sumByName;
+    }
+
+    public function getAmountByName($name)
+    {
+        $spendingByName = SpendingModel::find()->where(['name' => $name]);
+        $amountByName = $spendingByName->sum('amount');
+        return $amountByName;
     }
 }

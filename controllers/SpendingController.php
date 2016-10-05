@@ -157,7 +157,6 @@ class SpendingController extends Controller
         echo "<pre>";
         var_dump($arrayTransactionByPeriod);
         die;
-        //return $arrayTransactionByPeriod;
     }
 
     public function actionByCategory()
@@ -170,6 +169,32 @@ class SpendingController extends Controller
 
         echo "<pre>";
         var_dump($sumByCategory);
+        die;
+
+    }
+
+    public function actionByCashbox()
+    {
+        $get = Yii::$app->request->get();
+        $dateStart = $get['dateStart'];
+        $dateStop = $get['dateStop'];
+        $cashboxId = $get['id'];
+        $sumByCashbox =  Yii::$app->spending->getAmountByCashbox($cashboxId, $dateStart, $dateStop);
+
+        echo "<pre>";
+        var_dump($sumByCashbox);
+        die;
+
+    }
+
+    public function actionByName()
+    {
+        $get = Yii::$app->request->get();
+        $name = $get['name'];
+        $sumByName =  Yii::$app->spending->getSumByName($name);
+
+        echo "<pre>";
+        var_dump($sumByName);
         die;
 
     }
