@@ -64,8 +64,8 @@ class Spending extends \yii\db\ActiveRecord
 
     public function getUser()
     {
-        $userForSpending = Yii::$app->getModule('spending')->userForSpending;
-        return $this->hasOne($userForSpending::className(), ['id' => 'user_id']);
+        $userModel = Yii::$app->getModule('spending')->userModel;
+        return $this->hasOne($userModel::className(), ['id' => 'user_id']);
     }
 
     public function getCashbox()

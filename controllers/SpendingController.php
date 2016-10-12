@@ -7,6 +7,7 @@ use halumein\spending\models\Spending;
 use halumein\spending\models\search\SpendingSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use halumein\spending\models\Category;
 
@@ -18,11 +19,14 @@ class SpendingController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->adminRoles,
+                    ],
+                ]
             ],
         ];
     }
@@ -36,8 +40,8 @@ class SpendingController extends Controller
         $searchModel = new SpendingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        $userForSpendingModel = $this->module->userForSpending;
-        $activeUsers = $userForSpendingModel::find()->active()->all();
+        $userModelModel = $this->module->userModel;
+        $activeUsers = $userModelModel::find()->active()->all();
 
         $cashboxClassName = $this->module->cashboxModel;
         $cashboxModel = new $cashboxClassName;

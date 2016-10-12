@@ -5,6 +5,7 @@ namespace halumein\spending\controllers;
 use Yii;
 use halumein\spending\models\Category;
 use halumein\spending\models\search\CategorySearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,11 +18,14 @@ class CategoryController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['post'],
-                ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => $this->module->adminRoles,
+                    ],
+                ]
             ],
         ];
     }
