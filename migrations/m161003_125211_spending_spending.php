@@ -27,6 +27,7 @@ class m161003_125211_spending_spending extends Migration
                 'cost'=> $this->decimal(19, 2)->notNull(),
                 'cashbox_id'=> $this->integer(11)->notNull(),
                 'user_id'=> $this->integer(11)->notNull(),
+                'comment'=> $this->text()->null()->defaultValue(null),
             ],$tableOptions
         );
     }

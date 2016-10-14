@@ -84,15 +84,17 @@ class SpendingController extends Controller
             $cost = $postData['cost'];
             $cashboxId = $postData['cashbox_id'];
 
-
+            $params = [];
             if ($postData['amount'] != "") {
-                $amount = $postData['amount'];
-            } else {
-                $amount = 1;
+                $params['amount'] = $postData['amount'];
+            }
+
+            if ($postData['comment']) {
+                $params['comment'] = $postData['comment'];
             }
 
             //записываем на основаниии затраты через метод
-            Yii::$app->spending->add($name, $cost, $categoryId, $cashboxId, $amount);
+            Yii::$app->spending->add($name, $cost, $categoryId, $cashboxId, $params);
             return $this->redirect(['index']);
 
         } else {

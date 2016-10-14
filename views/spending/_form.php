@@ -82,6 +82,14 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <?= $form->field($model, 'comment')->textArea() ?>
+        </div>
+    </div>
+
+
+
     <div class="form-group">
         <?php echo Html::submitButton($model->isNewRecord ? 'Добавить' : 'Изменить', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

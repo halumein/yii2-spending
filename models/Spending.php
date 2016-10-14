@@ -15,6 +15,7 @@ use Yii;
  * @property string $cost
  * @property integer $cashbox_id
  * @property integer $user_id
+ * @property string $comment
  */
 class Spending extends \yii\db\ActiveRecord
 {
@@ -37,6 +38,7 @@ class Spending extends \yii\db\ActiveRecord
             [['category_id', 'cashbox_id', 'user_id'], 'integer'],
             [['amount', 'cost'], 'number'],
             [['name'], 'string', 'max' => 255],
+            [['comment'], 'string'],
         ];
     }
 
@@ -54,6 +56,7 @@ class Spending extends \yii\db\ActiveRecord
             'cost' => 'Стоимость',
             'cashbox_id' => 'Касса',
             'user_id' => 'Пользователь',
+            'comment' => 'Комментарий',
         ];
     }
 

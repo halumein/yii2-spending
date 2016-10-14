@@ -16,7 +16,7 @@ class Spending implements SpendingInterface
         parent::init();
     }
 
-    public function add($name, $cost, $category, $cashboxId, $amount = 1)
+    public function add($name, $cost, $category, $cashboxId, $params)
     {
         $model = new SpendingModel();
 
@@ -24,7 +24,16 @@ class Spending implements SpendingInterface
         $model->name        = $name;
         $model->cost        = $cost;
         $model->cashbox_id  = $cashboxId;
-        $model->amount      = $amount;
+        $model->amount      = 1;
+        $model->comment     = "";
+
+        if (isset($params['amount'])) {
+            $model->amount = $params['amount'];
+        }
+
+        if (isset($params['comment'])) {
+            $model->comment = $params['comment'];
+        }
 
         $model->user_id     = \Yii::$app->user->id;
         $model->date        = date("Y-m-d H:i:s");

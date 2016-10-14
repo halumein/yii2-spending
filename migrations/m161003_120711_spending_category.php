@@ -25,6 +25,20 @@ class m161003_120711_spending_category extends Migration
                 'sort'=> $this->integer(11)->null()->defaultValue(null),
             ],$tableOptions
         );
+
+        $this->insert('{{%spending_category}}', [
+            'id' => '1',
+            'parent_id' => NULL,
+            'name' => 'Офисные',
+            'sort' => NULL,
+        ]);
+
+        $this->insert('{{%spending_category}}', [
+            'id' => '2',
+            'parent_id' => NULL,
+            'name' => 'Зарплаты',
+            'sort' => NULL,
+        ]);
     }
 
     public function safeDown()
