@@ -6,6 +6,8 @@ use yii\base\Component;
 use halumein\spending\models\Spending as SpendingModel;
 use halumein\spending\interfaces\Spending as SpendingInterface;
 use halumein\spending\models\Category;
+use halumein\spending\events\SpendingEvent;
+
 
 class Spending implements SpendingInterface
 {
@@ -14,19 +16,25 @@ class Spending implements SpendingInterface
         parent::init();
     }
 
-    public function add($params)
+    public function add($name, $cost, $category, $cashboxId, $amount = 1)
     {
         $model = new SpendingModel();
 
-        $model->category_id = $params['category_id'];
-        $model->cashbox_id  = $params['cashbox_id'];
-        $model->name        = $params['name'];
-        $model->amount      = $params['amount'];
-        $model->cost        = $params['cost'];
+        $model->category_id = $category;
+        $model->name        = $name;
+        $model->cost        = $cost;
+        $model->cashbox_id  = $cashboxId;
+        $model->amount      = $amount;
+
         $model->user_id     = \Yii::$app->user->id;
         $model->date        = date("Y-m-d H:i:s");
 
         if ($model->save()) {
+
+            $module = \Yii::$app->getModule('spending');
+            $spendingEvent = new SpendingEvent(['model' => $model]);
+            $module->trigger($module::EVENT_SPENDING_CEATE, $spendingEvent);
+
             return [
                 'status' => 'success'
             ];

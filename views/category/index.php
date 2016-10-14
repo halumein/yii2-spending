@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     Category::buildTextTree(),
                     ['class' => 'form-control', 'prompt' => 'Все категории']
                 ),
-                'value' => 'parentName'
+                'value' => 'parent.name'
             ],
 
             ['class' => 'yii\grid\ActionColumn', 'template' => '{update} {delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 105px;']],

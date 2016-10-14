@@ -21,8 +21,12 @@ php yii migrate --migrationPath=vendor/halumein/yii2-spending/migrations
     'modules' => [
         'spending' => [
             'class' => 'halumein\spending\Module',
+            'userModel' => 'app\models\User',
+            'adminRoles' => ['superadmin', 'administrator'],
+            'on create' => function($event) {
+                \Yii::$app->cashbox->addTransaction('outcome', $event->model->cost, $event->model->cashbox_id);
+            },
         ],
         //...
     ]
 ```
-

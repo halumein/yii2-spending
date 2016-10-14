@@ -4,5 +4,5 @@ namespace halumein\spending\interfaces;
 
 interface Spending
 {
-    public function add($params);
+    public function add($name, $cost, $category, $cashboxId, $amount);
 }
