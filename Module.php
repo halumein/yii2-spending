@@ -6,6 +6,7 @@ class Module extends \yii\base\Module
 {
 
     const EVENT_SPENDING_CEATE = 'create';
+    const EVENT_SPENDING_REMOVE = 'remove';
 
 
     public $userModel = '\common\models\User';

@@ -37,6 +37,37 @@ class SpendingController extends Controller
      */
     public function actionIndex()
     {
+
+        $fastSpendingModel = new Spending();
+        if ($fastSpendingModel->load(Yii::$app->request->post())){
+
+            $cashboxId = $fastSpendingModel->cashbox_id;
+
+            $lastSpending = Spending::find()
+                                ->where(['name' => $fastSpendingModel->name])
+                                ->orderBy(['id' => SORT_DESC])
+                                ->one();
+
+            if ($lastSpending) {
+                $categoryId = $lastSpending->category_id;
+                $cashboxId = $lastSpending->cashbox_id;
+            } else {
+                $categoryId = null;
+            }
+
+
+            Yii::$app->spending->add($fastSpendingModel->name, $fastSpendingModel->cost, $categoryId, $cashboxId);
+
+            $fastSpendingModel = new Spending();
+        }
+
+        $model = new Spending();
+        $data = $model::find()
+            ->select(['name as value', 'name as label'])
+            ->distinct()
+            ->asArray()
+            ->all();
+
         $searchModel = new SpendingSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -47,11 +78,16 @@ class SpendingController extends Controller
         $cashboxModel = new $cashboxClassName;
         $activeCashboxes = $cashboxModel->activeCashboxes;
 
+        $dataProvider->query->orderBy(['id' => SORT_DESC]);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'activeUsers' => $activeUsers,
             'activeCashboxes' => $activeCashboxes,
+            'fastSpendingModel' => $fastSpendingModel,
+            'data' => $data,
+
         ]);
     }
 
@@ -126,7 +162,7 @@ class SpendingController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,

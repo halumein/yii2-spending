@@ -76,7 +76,7 @@ class Category extends \yii\db\ActiveRecord
 
         foreach($categories as $level1) {
             $return[$level1['id']] = $level1;
-            $return[$level1['id']]['childs'] = self::buldTree($level1['id']);
+            $return[$level1['id']]['childs'] = self::buildTree($level1['id']);
         }
 
         return $return;

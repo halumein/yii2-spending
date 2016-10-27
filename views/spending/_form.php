@@ -55,11 +55,11 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-12 col-md-6">
-            <?php echo $form->field($model, 'amount')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
+            <?php // echo $form->field($model, 'amount')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
         </div>
-    </div>
+    </div> -->
 
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -87,7 +87,6 @@ use yii\helpers\ArrayHelper;
             <?= $form->field($model, 'comment')->textArea() ?>
         </div>
     </div>
-
 
 
     <div class="form-group">

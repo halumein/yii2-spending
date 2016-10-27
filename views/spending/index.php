@@ -5,6 +5,15 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use halumein\spending\models\Category;
 use yii\helpers\ArrayHelper;
+use nex\datepicker\DatePicker;
+
+if($dateStart = yii::$app->request->get('date_start')) {
+    $dateStart = date('d.m.Y', strtotime($dateStart));
+}
+
+if($dateStop = yii::$app->request->get('date_stop')) {
+    $dateStop = date('d.m.Y', strtotime($dateStop));
+}
 
 /* @var $this yii\web\View */
 /* @var $searchModel halumein\spending\models\search\SpendingSearch */
@@ -14,9 +23,6 @@ $this->title = 'Затраты';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="spending-index">
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
 
     <div class="row">
         <div class="col-sm-4 col-md-3">
@@ -32,6 +38,84 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <br>
+    <br>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Быстрая трата</h3>
+        </div>
+        <div class="panel-body">
+            <?= $this->render('_fastSpendingForm', [
+                'activeCashboxes' => $activeCashboxes,
+                'model' => $fastSpendingModel,
+                'data' => $data,
+            ]); ?>
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?=yii::t('order', 'Search');?></h3>
+        </div>
+        <div class="panel-body">
+            <form class="row search">
+                <input type="hidden" name="SpendingSearch[name]" value="" />
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= DatePicker::widget([
+                                'name' => 'date_start',
+                                'addon' => false,
+                                'value' => $dateStart,
+                                'size' => 'sm',
+                                'language' => 'ru',
+                                'placeholder' => yii::t('order', 'Date from'),
+                                'clientOptions' => [
+                                    'format' => 'L',
+                                    'minDate' => '2015-01-01',
+                                    'maxDate' => date('Y-m-d'),
+                                ],
+                                'dropdownItems' => [
+                                    ['label' => 'Yesterday', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
+                                    ['label' => 'Tomorrow', 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
+                                    ['label' => 'Some value', 'url' => '#', 'value' => 'Special value'],
+                                ],
+                            ]);?>
+                        </div>
+                        <div class="col-md-6">
+                            <?= DatePicker::widget([
+                                'name' => 'date_stop',
+                                'addon' => false,
+                                'value' => $dateStop,
+                                'size' => 'sm',
+                                'placeholder' => yii::t('order', 'Date to'),
+                                'language' => 'ru',
+                                'clientOptions' => [
+                                    'format' => 'L',
+                                    'minDate' => '2015-01-01',
+                                    'maxDate' => date('Y-m-d'),
+                                ],
+                                'dropdownItems' => [
+                                    ['label' => yii::t('order', 'Yesterday'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('-1 day')],
+                                    ['label' => yii::t('order', 'Tomorrow'), 'url' => '#', 'value' => \Yii::$app->formatter->asDate('+1 day')],
+                                    ['label' => yii::t('order', 'Some value'), 'url' => '#', 'value' => 'Special value'],
+                                ],
+                            ]);?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <input class="form-control btn-success" type="submit" value="Поиск" />
+                </div>
+
+                <div class="col-md-3">
+                    <a class="btn btn-default form-control text-center" href="<?= Url::to(['/spending/spending/index']) ?>" />Cбросить все фильтры</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-12">
             <?php echo GridView::widget([
@@ -39,7 +123,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterModel' => $searchModel,
                 'columns' => [
 
-                    ['attribute' => 'id', 'filter' => false, 'options' => ['style' => 'width: 55px;']],
+                    ['attribute' => 'id', 'filter' => true, 'options' => ['style' => 'width: 55px;']],
                     'name',
                     [
                         'attribute' => 'category_id',
@@ -52,7 +136,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => 'category.name'
                     ],
                     ['attribute' => 'date', 'filter' => false],
-                    ['attribute' => 'amount', 'filter' => false, 'options' => ['style' => 'width: 70px;']],
+                    // ['attribute' => 'amount', 'filter' => false, 'options' => ['style' => 'width: 70px;']],
                     ['attribute' => 'cost', 'filter' => false, 'options' => ['style' => 'width: 100px;']],
                     [
                         'attribute' => 'cashbox_id',
@@ -74,6 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ),
                         'value' => 'user.fullName'
                     ],
+                    'comment:ntext',
 
                     //['class' => 'yii\grid\ActionColumn'],
                 ],

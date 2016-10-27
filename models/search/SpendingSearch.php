@@ -64,6 +64,16 @@ class SpendingSearch extends Spending
 
         $query->andFilterWhere(['like', 'name', $this->name]);
 
+        if($dateStart = yii::$app->request->get('date_start')) {
+            $dateStart = date('Y-m-d', strtotime($dateStart));
+            $query->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
+        }
+
+        if($dateStop = yii::$app->request->get('date_stop')) {
+            $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
+            $query->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
+        }
+
         return $dataProvider;
     }
 }

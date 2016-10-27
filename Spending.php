@@ -16,7 +16,7 @@ class Spending implements SpendingInterface
         parent::init();
     }
 
-    public function add($name, $cost, $category, $cashboxId, $params)
+    public function add($name, $cost, $category, $cashboxId, $params = null)
     {
         $model = new SpendingModel();
 
@@ -52,6 +52,20 @@ class Spending implements SpendingInterface
                 'status' => 'error',
                 'error' => $model->errors
             ];
+        }
+    }
+
+    public function remove($spendingId)
+    {
+        $model = SpendingModel::findOne($spendingId);
+
+        if ($model) {
+            $module = \Yii::$app->getModule('spending');
+            $spendingEvent = new SpendingEvent(['model' => $model]);
+            $module->trigger($module::EVENT_SPENDING_REMOVE, $spendingEvent);
+            return $model->delete();
+        } else {
+            return true;
         }
     }
 

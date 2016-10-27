@@ -21,7 +21,7 @@ class m161003_125211_spending_spending extends Migration
             [
                 'id'=> $this->primaryKey(11),
                 'date'=> $this->datetime()->notNull(),
-                'category_id'=> $this->integer(11)->notNull(),
+                'category_id'=> $this->integer(11)->null(),
                 'name'=> $this->string(255)->notNull(),
                 'amount'=> $this->decimal(10, 3)->notNull(),
                 'cost'=> $this->decimal(19, 2)->notNull(),

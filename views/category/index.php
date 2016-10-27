@@ -38,7 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'columns' => [
 
                     ['attribute' => 'id', 'filter' => false, 'options' => ['style' => 'width: 55px;']],
-                    'name',
                     [
                         'attribute' => 'parent_id',
                         'filter' => Html::activeDropDownList(
@@ -48,8 +47,9 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'form-control', 'prompt' => 'Все категории']
                         ),
                         'value' => 'parent.name'
+                        // 'format' => 'raw',
                     ],
-
+                    'name',
                     ['class' => 'yii\grid\ActionColumn', 'template' => '{update} {delete}',  'buttonOptions' => ['class' => 'btn btn-default'], 'options' => ['style' => 'width: 105px;']],
                 ],
             ]); ?>

@@ -33,7 +33,7 @@ class Spending extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'category_id', 'name', 'user_id'], 'required'],
+            [['date', 'name', 'user_id'], 'required'],
             [['date'], 'safe'],
             [['category_id', 'cashbox_id', 'user_id'], 'integer'],
             [['amount', 'cost'], 'number'],
