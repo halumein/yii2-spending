@@ -38,27 +38,15 @@ class SpendingController extends Controller
     public function actionIndex()
     {
 
-        $fastSpendingModel = new Spending();
-        if ($fastSpendingModel->load(Yii::$app->request->post())){
+        $newSpendingModel = new Spending();
+        if ($newSpendingModel->load(Yii::$app->request->post())){
 
-            $cashboxId = $fastSpendingModel->cashbox_id;
+            $params['comment'] = $newSpendingModel->comment;
 
-            $lastSpending = Spending::find()
-                                ->where(['name' => $fastSpendingModel->name])
-                                ->orderBy(['id' => SORT_DESC])
-                                ->one();
+            //записываем на основаниии затраты через метод
+            Yii::$app->spending->add($newSpendingModel->name, $newSpendingModel->cost, $newSpendingModel->category_id, $newSpendingModel->cashbox_id, $params);
 
-            if ($lastSpending) {
-                $categoryId = $lastSpending->category_id;
-                $cashboxId = $lastSpending->cashbox_id;
-            } else {
-                $categoryId = null;
-            }
-
-
-            Yii::$app->spending->add($fastSpendingModel->name, $fastSpendingModel->cost, $categoryId, $cashboxId);
-
-            $fastSpendingModel = new Spending();
+            $newSpendingModel = new Spending();
         }
 
         $model = new Spending();
@@ -85,8 +73,8 @@ class SpendingController extends Controller
             'dataProvider' => $dataProvider,
             'activeUsers' => $activeUsers,
             'activeCashboxes' => $activeCashboxes,
-            'fastSpendingModel' => $fastSpendingModel,
             'data' => $data,
+            'newSpendingModel' => $newSpendingModel
 
         ]);
     }

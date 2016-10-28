@@ -18,10 +18,20 @@ use yii\helpers\ArrayHelper;
 
     <?php echo $form->errorSummary($model); ?>
 
-    <label class="control-label" for="spending-name">Наименование</label>
-
     <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-3">
+            <?= $form->field($model, 'category_id')
+            ->widget(Select2::classname(), [
+                'data' => Category::buildTextTree(null, 1),
+                'language' => 'ru',
+                'options' => ['placeholder' => 'Выберите категорию ...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]);
+            ?>
+        </div>
+        <div class="col-sm-12 col-md-3">
         <?php
             echo $form->field($model, 'name')
             ->widget(AutoComplete::classname(), [
@@ -34,41 +44,15 @@ use yii\helpers\ArrayHelper;
                 ],
                 'options' => [
                    'class' => 'form-control',
-                ],
-            ])->label(false);
-        ?>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <?= $form->field($model, 'category_id')
-            ->widget(Select2::classname(), [
-                'data' => Category::buildTextTree(null, 1),
-                'language' => 'ru',
-                'options' => ['placeholder' => 'Выберите категорию ...'],
-                'pluginOptions' => [
-                    'allowClear' => true
+                   'placeholder' => 'на что'
                 ],
             ]);
-            ?>
+        ?>
         </div>
-    </div>
-
-    <!-- <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <?php // echo $form->field($model, 'amount')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
-        </div>
-    </div> -->
-
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-2">
             <?php echo $form->field($model, 'cost')->textInput(['maxlength' => true, 'placeholder' => '0.00']) ?>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-4">
             <?php echo $form->field($model, 'cashbox_id')
                 ->widget(Select2::classname(), [
                     'data' => ArrayHelper::map($activeCashboxes, 'id', 'nameWithCurrentBalance'),
@@ -82,8 +66,14 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-12 col-md-6">
+            <?php // echo $form->field($model, 'amount')->textInput(['maxlength' => true, 'placeholder' => '0.000']) ?>
+        </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
             <?= $form->field($model, 'comment')->textArea() ?>
         </div>
     </div>

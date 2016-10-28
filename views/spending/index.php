@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-4 col-md-3">
         <p>
-            <?php echo Html::a('Добавить затрату', ['create'], ['class' => 'btn btn-success']) ?>
+            <?php // echo Html::a('Добавить затрату', ['create'], ['class' => 'btn btn-success']) ?>
         </p>
         </div>
         <div class="col-sm-8 col-md-9" >
@@ -37,19 +37,17 @@ $this->params['breadcrumbs'][] = $this->title;
             </ul>
         </div>
     </div>
-
-    <br>
     <br>
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">Быстрая трата</h3>
+            <h3 class="panel-title">Добавить затрату</h3>
         </div>
         <div class="panel-body">
-            <?= $this->render('_fastSpendingForm', [
-                'activeCashboxes' => $activeCashboxes,
-                'model' => $fastSpendingModel,
+            <?php echo $this->render('_form', [
+                'model' => $newSpendingModel,
                 'data' => $data,
-            ]); ?>
+                'activeCashboxes' => $activeCashboxes,
+            ]) ?>
         </div>
     </div>
 
@@ -121,6 +119,11 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php echo GridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
+                'rowOptions' => function ($model, $key, $index, $grid) {
+                    if($model->deleted != null) {
+                        return ['class' => 'danger'];
+                    }
+                },
                 'columns' => [
 
                     ['attribute' => 'id', 'filter' => true, 'options' => ['style' => 'width: 55px;']],
@@ -159,6 +162,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => 'user.fullName'
                     ],
                     'comment:ntext',
+                    [
+                        'attribute' => 'deleted',
+                        'value' => function($model) {
+                            if ($model->deleted != null) {
+                                return 'операция отменена';
+                            } else {
+                                return "";
+                            }
+                        }
+                    ]
 
                     //['class' => 'yii\grid\ActionColumn'],
                 ],

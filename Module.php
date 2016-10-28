@@ -12,6 +12,7 @@ class Module extends \yii\base\Module
     public $userModel = '\common\models\User';
     public $adminRoles = ['superadmin', 'admin'];
     public $cashboxModel = '\halumein\cashbox\models\Cashbox';
+    public $salaryCategory = 2;
 
     public function init()
     {

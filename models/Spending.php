@@ -33,11 +33,11 @@ class Spending extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date', 'name', 'user_id'], 'required'],
-            [['date'], 'safe'],
+            [['date', 'name', 'cashbox_id', 'user_id', 'category_id'], 'required'],
+            [['date', 'deleted'], 'safe'],
             [['category_id', 'cashbox_id', 'user_id'], 'integer'],
-            [['amount', 'cost'], 'number'],
-            [['name'], 'string', 'max' => 255],
+            [['amount', 'cost', 'item_id'], 'number'],
+            [['name', 'model'], 'string', 'max' => 255],
             [['comment'], 'string'],
         ];
     }
@@ -57,6 +57,9 @@ class Spending extends \yii\db\ActiveRecord
             'cashbox_id' => 'Касса',
             'user_id' => 'Пользователь',
             'comment' => 'Комментарий',
+            'model' => 'Модель',
+            'item_id' => 'ID записи модели',
+            'deleted' => 'Удалён',
         ];
     }
 

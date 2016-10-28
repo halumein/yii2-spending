@@ -26,6 +26,8 @@ class Spending implements SpendingInterface
         $model->cashbox_id  = $cashboxId;
         $model->amount      = 1;
         $model->comment     = "";
+        $model->model       = null;
+        $model->item_id     = null;
 
         if (isset($params['amount'])) {
             $model->amount = $params['amount'];
@@ -33,6 +35,14 @@ class Spending implements SpendingInterface
 
         if (isset($params['comment'])) {
             $model->comment = $params['comment'];
+        }
+
+        if (isset($params['model'])) {
+            $model->model = $params['model'];
+        }
+
+        if (isset($params['item_id'])) {
+            $model->item_id = $params['item_id'];
         }
 
         $model->user_id     = \Yii::$app->user->id;
@@ -55,6 +65,17 @@ class Spending implements SpendingInterface
         }
     }
 
+    public function rollbackSpendingByModelAndId($model, $itemId)
+    {
+        $model = SpendingModel::find()->where(['model' => $model, 'item_id' => $itemId])->one();
+
+        if ($model) {
+            $this->remove($model->id);
+        } else {
+            return true;
+        }
+    }
+
     public function remove($spendingId)
     {
         $model = SpendingModel::findOne($spendingId);
@@ -63,11 +84,14 @@ class Spending implements SpendingInterface
             $module = \Yii::$app->getModule('spending');
             $spendingEvent = new SpendingEvent(['model' => $model]);
             $module->trigger($module::EVENT_SPENDING_REMOVE, $spendingEvent);
-            return $model->delete();
+            $model->deleted = date('Y-m-d H:i:m');
+            return $model->save();
         } else {
             return true;
         }
     }
+
+
 
     /*
    Возвращает массив объектов ActiveRecord отобраный за заданный период.
