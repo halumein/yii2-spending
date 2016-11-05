@@ -70,7 +70,7 @@ class SpendingSearch extends Spending
         }
 
         if($dateStop = yii::$app->request->get('date_stop')) {
-            $dateStop = date('Y-m-d H:i:s', strtotime($dateStop)+86399);
+            $dateStop = date('Y-m-d H:i:s', strtotime($dateStop));
             $query->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }
 
