@@ -108,7 +108,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
 
                 <div class="col-md-3">
-                    <a class="btn btn-default form-control text-center" href="<?= Url::to(['/spending/spending/index']) ?>" />Cбросить все фильтры</a>
+                    <a class="btn btn-default form-control text-center" href="<?= Url::to(['/spending/spending/index']) ?>">Cбросить все фильтры</a>
                 </div>
             </form>
         </div>
