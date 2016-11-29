@@ -164,10 +164,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'comment:ntext',
                     [
                         'attribute' => 'deleted',
-                        'value' => function($model) {
+                        'content' => function($model) {
                             if ($model->deleted != null) {
                                 return 'операция отменена';
                             } else {
+                                if(empty($model->model)) {
+                                    return '<a href="'.Url::toRoute(['/spending/spending/delete', 'id' => $model->id]).'" class="btn btn-danger" title="Отменить" aria-label="Отменить" data-pjax="0" data-confirm="Вы уверены, что хотите отменить эту операцию?" data-method="post"><i class="glyphicon glyphicon-remove-sign" /></a>';
+                                }
                                 return "";
                             }
                         }

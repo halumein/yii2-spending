@@ -166,7 +166,7 @@ class SpendingController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        yii::$app->spending->remove($id);
 
         return $this->redirect(['index']);
     }

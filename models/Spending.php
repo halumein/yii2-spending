@@ -59,7 +59,7 @@ class Spending extends \yii\db\ActiveRecord
             'comment' => 'Комментарий',
             'model' => 'Модель',
             'item_id' => 'ID записи модели',
-            'deleted' => 'Удалён',
+            'deleted' => 'Отмена',
         ];
     }
 
