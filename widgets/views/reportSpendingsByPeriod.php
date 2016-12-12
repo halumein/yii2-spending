@@ -19,7 +19,7 @@ use yii\widgets\Pjax;
             if($simple) {
                 echo '<ul>';
                 foreach($dataProvider->getModels() as $model) {
-                    echo "<li>{$model->name} {$model->comment} - {$model->cost}</li>";
+                    if(!$model->deleted) echo "<li>{$model->name} {$model->comment} - {$model->cost}</li>";
                 }
                 echo '</ul>';
             } else {
