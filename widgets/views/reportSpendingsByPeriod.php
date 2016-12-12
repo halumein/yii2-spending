@@ -14,55 +14,66 @@ use yii\widgets\Pjax;
             <div class="total">
                 <p>Итого: <?=$dataProvider->query->sum('cost');?></p>
             </div>
-            <?php echo GridView::widget([
-                'dataProvider' => $dataProvider,
-                'filterModel' => $searchModel,
-                'rowOptions' => function ($model, $key, $index, $grid) {
-                    if($model->deleted != null) {
-                        return ['class' => 'danger'];
-                    }
-                },
-                'columns' => [
+            
+            <?php
+            if($simple) {
+                echo '<ul>';
+                foreach($dataProvider->getModels() as $model) {
+                    echo "<li>{$model->name} {$model->comment} - {$model->cost}</li>";
+                }
+                echo '</ul>';
+            } else {
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'rowOptions' => function ($model, $key, $index, $grid) {
+                        if($model->deleted != null) {
+                            return ['class' => 'danger'];
+                        }
+                    },
+                    'columns' => [
 
-                    ['attribute' => 'id', 'filter' => true, 'options' => ['style' => 'width: 55px;']],
-                    'name',
-                    [
-                        'attribute' => 'category_id',
-                        'filter' => Html::activeDropDownList(
-                            $searchModel,
-                            'category_id',
-                            Category::buildTextTree(),
-                            ['class' => 'form-control', 'prompt' => 'Все категории']
-                        ),
-                        'value' => 'category.name'
+                        ['attribute' => 'id', 'filter' => true, 'options' => ['style' => 'width: 55px;']],
+                        'name',
+                        [
+                            'attribute' => 'category_id',
+                            'filter' => Html::activeDropDownList(
+                                $searchModel,
+                                'category_id',
+                                Category::buildTextTree(),
+                                ['class' => 'form-control', 'prompt' => 'Все категории']
+                            ),
+                            'value' => 'category.name'
+                        ],
+                        ['attribute' => 'date', 'filter' => false],
+                        // ['attribute' => 'amount', 'filter' => false, 'options' => ['style' => 'width: 70px;']],
+                        ['attribute' => 'cost', 'filter' => false, 'options' => ['style' => 'width: 100px;']],
+                        [
+                            'attribute' => 'cashbox_id',
+                            'filter' => Html::activeDropDownList(
+                                $searchModel,
+                                'cashbox_id',
+                                ArrayHelper::map($activeCashboxes, 'id', 'name'),
+                                ['class' => 'form-control', 'prompt' => 'Все кассы']
+                            ),
+                            'value' => 'cashbox.name'
+                        ],
+                        [
+                            'attribute' => 'user_id',
+                            'filter' => Html::activeDropDownList(
+                                $searchModel,
+                                'user_id',
+                                ArrayHelper::map($activeUsers, 'id', 'name'),
+                                ['class' => 'form-control', 'prompt' => 'Все сотрудники']
+                            ),
+                            'value' => 'user.fullName'
+                        ],
+                        'comment:ntext',
+                        //['class' => 'yii\grid\ActionColumn'],
                     ],
-                    ['attribute' => 'date', 'filter' => false],
-                    // ['attribute' => 'amount', 'filter' => false, 'options' => ['style' => 'width: 70px;']],
-                    ['attribute' => 'cost', 'filter' => false, 'options' => ['style' => 'width: 100px;']],
-                    [
-                        'attribute' => 'cashbox_id',
-                        'filter' => Html::activeDropDownList(
-                            $searchModel,
-                            'cashbox_id',
-                            ArrayHelper::map($activeCashboxes, 'id', 'name'),
-                            ['class' => 'form-control', 'prompt' => 'Все кассы']
-                        ),
-                        'value' => 'cashbox.name'
-                    ],
-                    [
-                        'attribute' => 'user_id',
-                        'filter' => Html::activeDropDownList(
-                            $searchModel,
-                            'user_id',
-                            ArrayHelper::map($activeUsers, 'id', 'name'),
-                            ['class' => 'form-control', 'prompt' => 'Все сотрудники']
-                        ),
-                        'value' => 'user.fullName'
-                    ],
-                    'comment:ntext',
-                    //['class' => 'yii\grid\ActionColumn'],
-                ],
-            ]); ?>
+                ]);
+            }
+             ?>
             <?php Pjax::end(); ?>
         </div>
     </div>

@@ -12,6 +12,7 @@ class ReportSpendingsByPeriod extends \yii\base\Widget
 {
     public $dateStart;
     public $dateStop;
+    public $simple = false;
 
     public function init()
     {
@@ -44,6 +45,7 @@ class ReportSpendingsByPeriod extends \yii\base\Widget
             'dataProvider' => $dataProvider,
             'activeUsers' => $activeUsers,
             'activeCashboxes' => $activeCashboxes,
+            'simple' => $this->simple,
         ]);
     }
 }
