@@ -91,7 +91,10 @@ class Spending implements SpendingInterface
         }
     }
 
-
+    public function getCategories()
+    {
+        return Category::find()->all();
+    }
 
     /*
    Возвращает массив объектов ActiveRecord отобраный за заданный период.
