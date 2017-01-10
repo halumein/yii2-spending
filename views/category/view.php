@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model halumein\spending\models\Category */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Категории', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="category-view">
