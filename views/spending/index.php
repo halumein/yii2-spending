@@ -14,7 +14,7 @@ if($dateStart = yii::$app->request->get('date_start')) {
 if($dateStop = yii::$app->request->get('date_stop')) {
     $dateStop = date('d.m.Y', strtotime($dateStop));
 }
-
+$totalSum = 0;
 /* @var $this yii\web\View */
 /* @var $searchModel halumein\spending\models\search\SpendingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -40,9 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <br>
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">Добавить затрату</h3>
+            <h3 class="panel-title"><a href="#" onclick="$('.spending-add-body').toggleClass('hidden'); return false;">Добавить затрату</a></h3>
         </div>
-        <div class="panel-body">
+        <div class="spending-add-body panel-body hidden">
             <?php echo $this->render('_form', [
                 'model' => $newSpendingModel,
                 'data' => $data,
@@ -53,9 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title"><?=yii::t('order', 'Search');?></h3>
+            <h3 class="panel-title"><a href="#" onclick="$('.spending-search-body').toggleClass('hidden'); return false;">Поиск</a></h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body spending-search-body <?= $showSearch ? '' : 'hidden' ?>">
             <form class="row search">
                 <input type="hidden" name="SpendingSearch[name]" value="" />
                 <div class="col-md-4">
@@ -114,6 +114,36 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title"><a href="#" onclick="$('.spending-statistics-body').toggleClass('hidden'); return false;"><?=yii::t('order', 'Statistics');?></a></h3>
+        </div>
+        <div class="spending-statistics-body panel-body hidden">
+            <table class="table table-stripped table-bordered">
+                <thead>
+                    <th>Категория</th>
+                    <th>Сумма за период</th>
+                </thead>
+                <tbody>
+                    <?php foreach ($statistic['totals'] as $key => $total) { ?>
+                        <?php if ((int)$total['sum'] > 0){ ?>
+                            <?php $totalSum += (int)$total['sum']; ?>
+                            <tr>
+                                <td><?= $total['name'] ?></td>
+                                <td><?= $total['sum'] ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } ?>
+                    <tr>
+                        <td><strong>Итого за период:</strong></td>
+                        <td><strong><?= $totalSum ?></strong></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-12">
             <?php echo GridView::widget([
@@ -138,9 +168,21 @@ $this->params['breadcrumbs'][] = $this->title;
                         ),
                         'value' => 'category.name'
                     ],
-                    ['attribute' => 'date', 'filter' => false],
+                    [
+                        'attribute' => 'date',
+                        'filter' => false,
+                        'format' => 'raw',
+                        'value' => function($model) {
+                            return date('d.m.Y H:i:s', strtotime($model->date));
+                        }
+                    ],
                     // ['attribute' => 'amount', 'filter' => false, 'options' => ['style' => 'width: 70px;']],
-                    ['attribute' => 'cost', 'filter' => false, 'options' => ['style' => 'width: 100px;']],
+                    [
+                        'attribute' => 'cost',
+                        'filter' => false,
+                        'footer' => $statistic['costSumByPage'],
+                        'options' => ['style' => 'width: 100px;'],
+                    ],
                     [
                         'attribute' => 'cashbox_id',
                         'filter' => Html::activeDropDownList(
@@ -174,11 +216,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 return "";
                             }
                         }
-                    ]
-
+                    ],
                     //['class' => 'yii\grid\ActionColumn'],
                 ],
+                'showFooter'=>true,
             ]); ?>
+
         </div>
     </div>
 

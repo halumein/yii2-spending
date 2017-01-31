@@ -68,14 +68,46 @@ class SpendingController extends Controller
 
         $dataProvider->query->orderBy(['id' => SORT_DESC]);
 
+        $models = $dataProvider->getModels();
+        $pageCosts = \yii\helpers\ArrayHelper::getColumn($models, 'cost');
+
+        $statistic = [];
+
+        $categoryIds = \yii\helpers\ArrayHelper::getColumn(Spending::find()->groupBy(['category_id'])->all(), 'category_id');
+
+
+        $dateStart = Yii::$app->request->getQueryParam('date_start');
+        $dateStop = Yii::$app->request->getQueryParam('date_stop');
+        $searchFlag = false;
+
+        foreach ($categoryIds as $key => $id) {
+            $category = Category::findOne($id);
+            if (!$category) {
+                continue;
+            }
+            $sum = Spending::find()->where(['category_id' => $id]);
+            if ($dateStart) {
+                $searchFlag = true;
+                $sum->andWhere(['>=', 'date', date("Y-m-d H:i:s".$dateStart, strtotime($dateStart))]);
+            }
+            if ($dateStop) {
+                $searchFlag = true;
+                $sum->andWhere(['<=', 'date', date("Y-m-d H:i:s".$dateStop, strtotime($dateStop))]);
+            }
+            $sum = $sum->sum('cost');
+            $statistic['totals'][] = ['name' => $category->name, 'sum' => $sum];
+        }
+        $statistic['costSumByPage'] = array_sum($pageCosts);
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'activeUsers' => $activeUsers,
             'activeCashboxes' => $activeCashboxes,
             'data' => $data,
-            'newSpendingModel' => $newSpendingModel
-
+            'newSpendingModel' => $newSpendingModel,
+            'statistic' => $statistic,
+            'showSearch' => $searchFlag
         ]);
     }
 
