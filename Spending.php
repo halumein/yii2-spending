@@ -116,6 +116,7 @@ class Spending implements SpendingInterface
             $spendingByPeriod->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
             $spendingByPeriod->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }
+        $spendingByPeriod->andWhere(['deleted' => null]);
         $amountByPeriod = $spendingByPeriod->sum('amount');
 
         return $amountByPeriod;
@@ -141,6 +142,7 @@ class Spending implements SpendingInterface
             $spendingByPeriod->andWhere('date >= :dateStart', [':dateStart' => $dateStart]);
             $spendingByPeriod->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
         }
+        $spendingByPeriod->andWhere(['deleted' => null]);
         $sumByPeriod = $spendingByPeriod->sum('cost');
 
         return $sumByPeriod;
@@ -161,7 +163,7 @@ class Spending implements SpendingInterface
                 $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
             }
         }
-
+        $querySpendingByCategory->andWhere(['deleted' => null]);
         $amountByCategory = $querySpendingByCategory->sum('amount');
         return $amountByCategory;
     }
@@ -181,6 +183,7 @@ class Spending implements SpendingInterface
                 $querySpendingByCategory->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
             }
         }
+        $querySpendingByCategory->andWhere(['deleted' => null]);
 
         $sumByCategory = $querySpendingByCategory->sum('cost');
         return $sumByCategory;
@@ -203,6 +206,7 @@ class Spending implements SpendingInterface
             }
         }
 
+        $spendingByCashbox->andWhere(['deleted' => null]);
         $sumByCashbox = $spendingByCashbox->sum('cost');
         return $sumByCashbox;
     }
@@ -223,7 +227,7 @@ class Spending implements SpendingInterface
                 $spendingByCashbox->andWhere('date <= :dateStop', [':dateStop' => $dateStop]);
             }
         }
-
+        $spendingByCashbox->andWhere(['deleted' => null]);
         $amountByCashbox = $spendingByCashbox->sum('amount');
         return $amountByCashbox;
     }
@@ -231,6 +235,7 @@ class Spending implements SpendingInterface
     public function getSumByName($name)
     {
         $spendingByName = SpendingModel::find()->where(['name' => $name]);
+        $spendingByName->andWhere(['deleted' => null]);
         $sumByName = $spendingByName->sum('cost');
         return $sumByName;
     }
@@ -238,6 +243,7 @@ class Spending implements SpendingInterface
     public function getAmountByName($name)
     {
         $spendingByName = SpendingModel::find()->where(['name' => $name]);
+        $spendingByName->andWhere(['deleted' => null]);
         $amountByName = $spendingByName->sum('amount');
         return $amountByName;
     }
