@@ -125,19 +125,23 @@ $this->params['breadcrumbs'][] = $this->title;
                     <th>Сумма за период</th>
                 </thead>
                 <tbody>
-                    <?php foreach ($statistic['totals'] as $key => $total) { ?>
-                        <?php if ((int)$total['sum'] > 0){ ?>
-                            <?php $totalSum += (int)$total['sum']; ?>
-                            <tr>
-                                <td><?= $total['name'] ?></td>
-                                <td><?= $total['sum'] ?></td>
-                            </tr>
-                        <?php } ?>
+                    <?php if (isset($statistic['totals'])) { ?>
+                        <?php foreach ($statistic['totals'] as $key => $total) { ?>
+                            <?php if ((int)$total['sum'] > 0){ ?>
+                                <?php $totalSum += (int)$total['sum']; ?>
+                                <tr>
+                                    <td><?= $total['name'] ?></td>
+                                    <td><?= $total['sum'] ?></td>
+                                </tr>
+                                <?php } ?>
+                                <?php } ?>
+                                <tr>
+                                    <td><strong>Итого за период:</strong></td>
+                                    <td><strong><?= $totalSum ?></strong></td>
+                                </tr>
+                    <?php } else {?>
+                        Данных для статистики пока нет.
                     <?php } ?>
-                    <tr>
-                        <td><strong>Итого за период:</strong></td>
-                        <td><strong><?= $totalSum ?></strong></td>
-                    </tr>
 
                 </tbody>
             </table>
